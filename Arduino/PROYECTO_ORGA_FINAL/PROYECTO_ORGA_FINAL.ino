@@ -52,6 +52,7 @@ unsigned long previousMillis = 0;
 const long interval = 200; // Intervalo para animación
 
 void setup() {
+  delay(2000);
   Serial.begin(9600);      // USB serial
   Serial1.begin(9600);     // Bluetooth por pines 18/19 (TX1/RX1)
   
@@ -101,6 +102,8 @@ void manejarCaracter(char c) {
   if(c == '\n' || c == '\r' || c == ' '){
     input.trim();
     if(input.length() > 0){
+      Serial.print("Comando recibido: ");
+      Serial.println(input);  // Confirma recepción
       procesarComando(input);
     }
     input = "";
@@ -108,7 +111,6 @@ void manejarCaracter(char c) {
     input += c;
   }
 }
-
 void procesarKeypad() {
   char tecla = customKeypad.getKey();
   if(tecla){
