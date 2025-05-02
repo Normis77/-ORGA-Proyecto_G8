@@ -32,7 +32,7 @@ def Analizer(entrada):
         lex+=char
         n_column+=1
 
-        if lex == 'conf_ini':
+        if lex == 'configuracion':
             print(f'-->{lex}')
             chars_consumed = interpretar_lex(entrada[puntero+1:])
             lex = ''
@@ -81,7 +81,7 @@ def interpretar_lex(cadena):
 
         elif token.isspace():
             token=''
-        elif token.lower() == 'conf:fin':
+        elif token.lower() == 'finconfiguracion':
             print(f'-->{token}')
             token = ''
             puntero += 1
