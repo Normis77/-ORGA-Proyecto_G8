@@ -50,8 +50,13 @@ def enviar_serial(mensaje):
 
 def leer_serial():
     try:
-        if puerto_serial.in_waiting > 0:
-            return puerto_serial.readline().decode('utf-8').strip()
+        # Esperar datos con timeout más largo
+        start_time = time.time()
+        while (time.time() - start_time) < 2:  # Esperar máximo 2 segundos
+            if puerto_serial.in_waiting > 0:
+                respuesta = puerto_serial.readline().decode('utf-8').strip()
+                return respuesta
+            time.sleep(0.1)
         return None
     except Exception as e:
         print(f"❌ Error al leer serial: {e}")
