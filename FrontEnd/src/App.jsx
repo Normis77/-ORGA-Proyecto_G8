@@ -8,26 +8,27 @@ function App() {
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className='page'>
+      <nav className='navbar-orga'>
+        <img src="src/img/mina-terrestre.png" alt="" className='logo'/>
+        <h2>BUSCAMINAS</h2>
+      </nav>
+      <div className='txts'>
+        <textarea name="console" id="" className='txt-confi'>
+        </textarea>
+        <div className='btns'>
+          <button className='btn-confi'>Configurar</button>
+          <div class="page_img">
+            <a href="tu-enlace.html" class="image-link">
+              <img src="src/img/tocar.png" alt="" className='imagebtn'/>
+            </a>
+            <a href="tu-enlace.html" class="image-link">
+              <img src="src/img/close_1828527.png" alt="" className='imagebtn'/>
+            </a>
+          </div>
+          </div>
+        </div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }

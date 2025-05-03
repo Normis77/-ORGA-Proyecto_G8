@@ -3,6 +3,14 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+ 
+}
+
+.page{
+  display: flex;
+  align-items:center;
+  justify-content:space-around;
+  flex-direction: column;
 }
 
 .logo {
@@ -18,19 +26,61 @@
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.navbar-orga{
+  display: flex;
+  position: fixed;
+  left: 0;
+  top: 0;
+  align-items: center;
+  width:100%;
+  height:75px;
+  padding:15px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.page_img{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+}
+
+.image-link{
+  margin:5px;
+  width: 100px;
+}
+
+.txts{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.txt-confi{
+  height: 375px;
+  width: 500px;
+  margin: 15px;
+  resize: none;
+}
+
+.imagebtn{
+  height: 80px;
+  width: 80px;
+}
+
+.btn-confi{
+  width: 225px;
+  height: 60px;
+  margin: 10px;
+  font-size:20px;
+  font-style:inherit; 
+}
+
+.btns{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
 }
 
 .card {
