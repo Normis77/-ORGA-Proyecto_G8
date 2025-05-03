@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from analizador import Analizer, posiciones
+from analizador import Analizador, posiciones
 import serial
 import time
 import os
@@ -67,8 +67,8 @@ def leer_serial():
 def ping():
     return 'pong'
 
-@app.route('/analizer', methods=['POST'])
-def analizer():
+@app.route('/manual', methods=['POST'])
+def manual():
     try:
         data = request.get_json()
         
@@ -82,6 +82,43 @@ def analizer():
         enviar_serial(f"{mensaje}\n".encode('utf-8'))
         
         return jsonify({"status": "success", "message": "Comando enviado al Arduino"})
+    
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route('/analizer', methods=['POST'])
+def analizer():
+    try:
+        txt = request.data.decode('utf-8')
+        posiciones.clear()
+        
+        # Procesar el texto con el analizador
+        Analizador(txt)
+        
+        # Enviar secuencia de comandos al Arduino
+        enviar_serial(b'configuracion\n')
+        time.sleep(1)
+        
+        # Enviar posiciones validadas
+        for pos in posiciones:
+            x, y = pos.getX(), pos.getY()
+            if 0 <= x < 4 and 0 <= y < 4:
+                valor = str(matrix[x][y])
+                enviar_serial(f"{valor}\n".encode('utf-8'))
+                time.sleep(0.5)
+            else:
+                print(f"⚠️ Posición inválida: x={x}, y={y}")
+        
+        # Finalizar configuración
+        enviar_serial(b'finconfiguracion\n')
+        time.sleep(1)
+        
+        return jsonify({
+            "status": "success",
+            "message": "Configuración completada",
+            "posiciones_validas": len(posiciones)
+        })
     
     except Exception as e:
         return jsonify({"error": str(e)}), 500
