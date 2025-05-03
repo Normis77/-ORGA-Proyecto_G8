@@ -52,6 +52,7 @@ unsigned long previousMillis = 0;
 const long interval = 200; // Intervalo para animación
 
 void setup() {
+  delay(2000);
   Serial.begin(9600);      // USB serial
   Serial1.begin(9600);     // Bluetooth por pines 18/19 (TX1/RX1)
   
@@ -76,8 +77,6 @@ void setup() {
   pinMode(ledJuego[i], OUTPUT);
   digitalWrite(ledJuego[i], LOW); // Apagados al inicio
 }
-
-
 }
 
 void loop() {
@@ -98,9 +97,9 @@ void procesarEntradas() {
 }
 
 void manejarCaracter(char c) {
-  if(c == '\n' || c == '\r' || c == ' '){
-    input.trim();
+  if(c == '\n' || c == '\r'){  // Solo considerar nuevos finales de línea
     if(input.length() > 0){
+      Serial.println(input);  // Mostrar comando recibido
       procesarComando(input);
     }
     input = "";
@@ -116,8 +115,8 @@ void procesarKeypad() {
     if(num != -1){
       if(configurando){
         actualizarConfiguracion(num);
-        Serial.println("Activado FF" + String(num + 1));
-        Serial1.println("Activado FF" + String(num + 1));
+        // Serial.println("Activado FF" + String(num + 1));
+        // Serial1.println("Activado FF" + String(num + 1));
       } else if(leyendoJuego){
         leerFlipFlop(num);
       }
@@ -127,8 +126,8 @@ void procesarKeypad() {
 
 void procesarComando(String comando) {
   auto responder = [](const String& msg){
-    Serial.println(msg);
-    Serial1.println(msg);
+    // Serial.println(msg);      // <-- Comenta estas líneas
+    // Serial1.println(msg);     // <-- Comenta estas líneas
   };
 
   int num = -1;
@@ -183,8 +182,8 @@ void leerFlipFlop(int num) {
   int estado = digitalRead(ffRD[num]);
   
   String mensaje = "FF" + String(num+1) + ": " + estado;
-  Serial.println(mensaje);
-  Serial1.println(mensaje);
+  // Serial.println(mensaje);
+  // Serial1.println(mensaje);
   
   if(estado == HIGH){
     gameOver();
@@ -201,8 +200,8 @@ void actualizarPuntaje() {
   puntaje++;
   actualizarPantalla("Jugando", puntaje, puntajeMax);
   String puntajeMsg = "Puntaje: " + String(puntaje);
-  Serial.println(puntajeMsg);
-  Serial1.println(puntajeMsg);
+  // Serial.println(puntajeMsg);
+  // Serial1.println(puntajeMsg);
   
   if(puntaje >= puntajeMax){
     actualizarPantalla("Ganaste :)", puntaje, puntajeMax);
@@ -212,8 +211,8 @@ void actualizarPuntaje() {
 }
 
 void gameOver() {
-  Serial.println("GAMEOVER");
-  Serial1.println("GAMEOVER");
+  // Serial.println("GAMEOVER");
+  // Serial1.println("GAMEOVER");
   digitalWrite(LEDINGAME, LOW);
   digitalWrite(LEDGAMEOVER, HIGH);
   actualizarPantalla("Game Over :(", puntaje, puntajeMax);
@@ -230,8 +229,8 @@ void gameOver() {
 void activarModoFiesta() {
   partyMode = true;
   previousMillis = millis();
-  Serial.println("GANASTE! Modo fiesta activado");
-  Serial1.println("GANASTE! Modo fiesta activado");
+  // Serial.println("GANASTE! Modo fiesta activado");
+  // Serial1.println("GANASTE! Modo fiesta activado");
 }
 
 void iniciarJuego() {
@@ -243,14 +242,14 @@ void iniciarJuego() {
   actualizarPantalla("Jugando", puntaje, puntajeMax);
 }
 
-
 void finalizarJuego() {
   leyendoJuego = false;
   digitalWrite(LEDINGAME, LOW);
+  digitalWrite(LEDWIN, LOW);
+  digitalWrite(LEDGAMEOVER, LOW);
   puntaje = 0;
   actualizarPantalla("Finalizando Juego", puntaje, puntajeMax);
 
-  //Para apagar los leds al resetear
   for (int i = 0; i < 16; i++) {
   digitalWrite(ledJuego[i], LOW);
   }
@@ -268,8 +267,8 @@ void resetSistema() {
   puntajeMax = 16;
   partyMode = false;
   actualizarPantalla("Reset", puntaje, puntajeMax);  // <- Agregado
-  Serial.println("Reseteado");
-  Serial1.println("Reseteado");
+  // Serial.println("Reseteado");
+  // Serial1.println("Reseteado");
   
   //Para apagar los leds al resetear
   for (int i = 0; i < 16; i++) {
@@ -331,8 +330,8 @@ void actualizarPantalla(String mensaje, int punteo, int punteoMax) {
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print(mensaje);
-  Serial.println("actualizando pantalla");
-  Serial1.println("actualizando pantalla");
+  // Serial.println("actualizando pantalla");
+  // Serial1.println("actualizando pantalla");
 
   lcd.setCursor(0, 1);
   lcd.print("Punteo ");

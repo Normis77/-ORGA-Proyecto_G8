@@ -20,14 +20,13 @@ global list_lex
 n_line = 0
 n_column = 0
 
-def Analizer(entrada):
-    global n_line
-    global n_column
+def Analizador(entrada):
+    global n_line, n_column
     lex = ''
     puntero = 0
+    entrada = entrada.lower().replace('conf_int', 'configuracion').replace('conf:fin', 'finconfiguracion')
      
     while puntero < len(entrada):
-
         char = entrada[puntero]
         lex+=char
         n_column+=1
