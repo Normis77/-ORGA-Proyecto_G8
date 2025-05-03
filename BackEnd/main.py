@@ -3,10 +3,11 @@ from analizador import Analizador, posiciones
 import serial
 import time
 import os
+from flask_cors import CORS
 
 # Inicialización de Flask
 app = Flask(__name__)
-
+CORS(app, origins=["http://localhost:5173"])
 # Configuración global del puerto serial
 puerto_serial = None
 

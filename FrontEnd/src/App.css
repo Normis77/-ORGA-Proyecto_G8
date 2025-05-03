@@ -63,9 +63,17 @@
   resize: none;
 }
 
-.imagebtn{
+.imagebtn {
   height: 80px;
   width: 80px;
+  transition: transform 0.2s ease-in-out;
+  cursor: pointer;
+}
+.imagebtn:hover {
+  transform: scale(0.9); /* Se hace un poco más pequeña al pasar el mouse */
+}
+.imagebtn:active {
+  transform: scale(0.8); /* Más pequeña aún al hacer clic */
 }
 
 .btn-confi{
@@ -75,7 +83,13 @@
   font-size:20px;
   font-style:inherit; 
 }
+.btn-confi:hover {
+  transform: scale(0.95);
+}
 
+.btn-confi:active {
+  transform: scale(0.9);
+}
 .btns{
   display: flex;
   justify-content: center;

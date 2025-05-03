@@ -1,29 +1,55 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
+import axios from 'axios'
+
 import './App.css'
 
 function App() {
-  const [respuesta, setRespuesta] = useState(null)
+  const [text, setText] = useState('')
+  const fileInputRef = useRef(null) // Referencia al input de archivo
 
-  const enviarAnalizador = async () => {
-    const textarea = document.querySelector(".txt-confi")
-    const texto = textarea.value
-
+  // Enviar texto plano a /analizer
+  const handleConfigurar = async () => {
     try {
-      const response = await fetch("http://localhost:4000/manual", {
-        method: "POST",
-        headers: {
-          "Content-Type": "text/plain",
-        },
-        body: texto,
+      const response = await axios.post('http://localhost:4000/analizer', text, {
+        headers: { 'Content-Type': 'text/plain' }
       })
-
-      const data = await response.json()
-      console.log("Respuesta analizador:", data)
-      setRespuesta(data.message || 'Configuración enviada.')
+      console.log(response.data)
+      alert("✔️ Texto enviado correctamente")
     } catch (error) {
-      console.error("Error al enviar al analizador:", error)
-      setRespuesta("Error al conectar con el backend.")
+      console.error("❌ Error al enviar texto:", error)
     }
+  }
+
+  // Enviar comando JSON a /manual
+  const enviarComandoManual = async (comando) => {
+    try {
+      const response = await axios.post('http://localhost:4000/manual', {
+        mensaje: comando
+      })
+      console.log(response.data)
+      alert(`✔️ Comando "${comando}" enviado`)
+    } catch (error) {
+      console.error("❌ Error al enviar comando:", error)
+    }
+  }
+
+  // Abrir explorador y cargar contenido del archivo
+  const handleArchivo = (event) => {
+    const file = event.target.files[0]
+    if (file && file.name.endsWith('.org')) {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        setText(e.target.result)
+      }
+      reader.readAsText(file)
+    } else {
+      alert("⚠️ Selecciona un archivo .org válido")
+    }
+  }
+
+  // Activar input oculto al hacer clic en la imagen
+  const abrirExplorador = () => {
+    fileInputRef.current.click()
   }
 
   return (
@@ -33,24 +59,34 @@ function App() {
           <img src="src/img/mina-terrestre.png" alt="" className='logo' />
           <h2>BUSCAMINAS</h2>
         </nav>
-
         <div className='txts'>
-          <textarea name="console" className='txt-confi'></textarea>
-
+          <textarea
+            name="console"
+            className='txt-confi'
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+          />
           <div className='btns'>
-            <button className='btn-confi' onClick={enviarAnalizador}>Configurar</button>
-
+            <button className='btn-confi' onClick={handleConfigurar}>Configurar</button>
             <div className="page_img">
-              <a href="#" className="image-link">
+              <a onClick={() => enviarComandoManual("initJuego")} className="image-link">
                 <img src="src/img/tocar.png" alt="" className='imagebtn' />
               </a>
-              <a href="#" className="image-link">
+              <a onClick={() => enviarComandoManual("finJuego")} className="image-link">
                 <img src="src/img/close_1828527.png" alt="" className='imagebtn' />
               </a>
+              <a onClick={abrirExplorador} className="image-link">
+                <img src="src/img/open.png" alt="" className='imagebtn' />
+              </a>
+              <input
+                type="file"
+                accept=".org"
+                ref={fileInputRef}
+                style={{ display: 'none' }}
+                onChange={handleArchivo}
+              />
             </div>
           </div>
-
-          {respuesta && <div className="respuesta">{respuesta}</div>}
         </div>
       </div>
     </>
